@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  #%L
+  test-azuremonitor
+  %%
+  Copyright (C) 2018 - 2021 Nuance Communications Inc. All Rights Reserved.
+  %%
+  The copyright to the computer program(s) herein is the property of
+  Nuance Communications Inc. The program(s) may be used and/or copied
+  only with the written permission from Nuance Communications Inc.
+  or in accordance with the terms and conditions stipulated in the
+  agreement/contract under which the program(s) have been supplied.
+  
+  Author: siyuan_bi
+  Date  : Oct 29, 2021, 11:14:02 AM
+  #L%
+  -->
+
+
+<configuration>
+    <include resource="logback=filters.xml"/>
+
+    <springProperty scope="context" name="appName" source="spring.application.name" />
+
+    <conversionRule conversionWord="crlf" converterClass="org.owasp.security.logging.mask.CRLFConverter" />
+    <conversionRule conversionWord="mask" converterClass="org.owasp.security.logging.mask.MaskingConverter" />
+
+    <appender name="SECURE_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- this can be used to completely drop any information logged with security classifier -->
+        <!-- <filter class="org.owasp.security.logging.filter.ExcludeClassifiedMarkerFilter"/> -->
+        <encoder>
+            <pattern>%d{"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"} %replace(&lt;%marker.${appName}.v1&gt; ){'&lt;.${appName}.v1&gt; ', ''}{session=%X{sessionId},trace=%X{traceId},span=%X{spanId},client=%X{clientIp},thread=%thread} %level: [%logger{35}] %crlf(%mask) %n</pattern>
+        </encoder>
+    </appender>
+
+    <springProfile name="dev, staging, debug">
+        <logger name="com.nuance.service" level="DEBUG" additivity="false">
+            <appender-ref ref="SECURE_CONSOLE"/>
+        </logger>
+        <root level="INFO">
+            <appender-ref ref="SECURE_CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="production, default">
+        <logger name="com.nuance.service" level="${LOG4J_LOGGING_LEVEL}" additivity="false">
+            <appender-ref ref="SECURE_CONSOLE"/>
+        </logger>
+
+        <root level="INFO">
+            <appender-ref ref="SECURE_CONSOLE"/>
+        </root>
+    </springProfile>
+</configuration>

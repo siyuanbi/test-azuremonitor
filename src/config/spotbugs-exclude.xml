@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!-- false-positives go here -->
+    <Match></Match>
+        <!-- we use OWASP secure logging to filter out CRLF globally - see logback-spring.xml -->
+        <Bug pattern="CRLF_INJECTION_LOGS"/>>
+    </Match>
+</FindBugsFilter>

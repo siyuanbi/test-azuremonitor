@@ -1,0 +1,65 @@
+imageRepo: "entrd-jfrog.ent.nuance.com/eiep-helm-dev-local"
+replicas: 1
+springProfiles: production
+jaegerHost: platform-jaeger-collector.platform-monitoring-jaeger-operator.svc.cluster.local
+istioInjectEnabled: true
+imagePullPolicy: Always
+
+service:
+  type: Gateway
+
+ambassador:
+  enabled: true
+
+networkPolicy:
+  enabled: true
+
+podDisruptionBudget:
+  enabled: true
+
+# Define the values for the app.kubernetes.io/component label in our Deployments, Services, etc
+componentLabels:
+  type: "app"
+
+hpa:
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 40
+  enabled: true
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 20
+  periodSeconds: 10
+
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 20
+  periodSeconds: 10
+
+prometheus:
+  metricsScrapeInterval: 15s
+  serviceMonitorEnabled: true
+  prometheusRulesEnabled: true
+  prometheusRulesLabels:
+    prometheus: prometheus
+    role: alert-rules
+  alertConfigurations:
+    podsDown:
+      pendingTime: 1m
+
+security:
+    securityContext:
+      runAsUser: 20000
+      runAsGroup: 30000
+      runAsNonRoot: true
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false

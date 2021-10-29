@@ -1,0 +1,15 @@
+{
+	"title": "test-azuremonitor",
+	"description": "test-azuremonitor Description",
+	"termsOfService": "urn:tos",
+	"contact": {
+		"name": "Nuance Communications Inc",
+		"url": "http://www.nuance.com/support",
+		"email": "support@nuance.com"
+	},
+	"license": {
+		"name": "COPYRIGHT (c) 2020 Nuance Communications Inc. All Rights Reserved.",
+		"url": "http://licensing.nuance.com"
+	},
+	"version": "1.0.0-SNAPSHOT"
+}

@@ -1,0 +1,12 @@
+{{- if eq .Values.ambassador.enabled true}}
+---
+apiVersion: getambassador.io/v2
+kind:  Mapping
+metadata:
+  name: {{ include "common.fullname" . }}
+  labels:
+    {{- include "common.standardLabels" (merge (dict "componentLabelValue" .Values.componentLabels.type) . ) | nindent 4 }}
+spec:
+  prefix: "{{- include "template.fullpath" .}}"
+  service: "{{- include "template.nameWithNamespace" .}}:9099"
+{{- end }}

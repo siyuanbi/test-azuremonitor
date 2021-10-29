@@ -1,0 +1,61 @@
+name: Maven Build
+
+on:
+  push:
+    branches: '**'
+
+jobs:
+  #get-version
+  #lint
+
+  maven:
+    name: Maven build
+#    needs: get-version
+    runs-on: [self-hosted, Linux, X64, nuance-internal-ent-rd-devops-centos7]
+    container:
+      image: iepdev.azurecr.io/baas/java-service-archetype
+      credentials:
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: /home/github/.m2/repository # docker image user's home folder
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Build maven package
+        run: |
+          mvn --batch-mode package -Dmaven.test.skip=true -Dlicense.skipCheckLicense=true -Dlicense.skipUpdateProjectLicense=true
+
+  helm:
+    name: Helm Build
+    needs: maven
+    runs-on: [self-hosted, Linux, X64, small]
+    env:
+      HELM_EXPERIMENTAL_OCI: 1
+      HELM_CHART_PATH: src/main/resources/archetype-resources/src/main/helm/chart
+      HELM_CHART_NAME: helm/iep-common-util
+      #      to be replaced by a get-version action developed by Sanjay
+      RELEASE_VERSION: 1.0.0
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        id: install_helm
+        with:
+          version: '3.6.3'
+      - name: Pull Helm Chart from OCI and build
+        run: |
+          cd $HELM_CHART_PATH
+          export HELM_OCI_IMAGE_WITH_VERSION=${{ secrets.HELM_DEV_ACR_HOSTNAME}}/${{ env.HELM_CHART_NAME }}:${{ env.RELEASE_VERSION }}
+          if [ -n "${{ secrets.HELM_DEV_ACR_HOSTNAME }}" ]; then helm registry login -u ${{ secrets.HELM_DEV_ACR_USERNAME }} -p ${{ secrets.HELM_DEV_ACR_PASSWORD }} ${{ secrets.HELM_DEV_ACR_HOSTNAME }}; else echo "IEP ACR dev credentials not set"; fi
+          if [ -n "${{ secrets.HELM_PROD_ACR_HOSTNAME }}" ]; then helm registry login -u ${{ secrets.HELM_PROD_ACR_HOSTNAME }} -p ${{ secrets.HELM_PROD_ACR_HOSTNAME }} ${{ secrets.HELM_PROD_ACR_HOSTNAME }}; else echo "IEP ACR prod credentials not set"; fi
+          helm chart pull $HELM_OCI_IMAGE_WITH_VERSION
+          helm chart export $HELM_OCI_IMAGE_WITH_VERSION
+          helm dependency update .
+
+#deploy java artifacts (to artifactory)

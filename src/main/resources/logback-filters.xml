@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  #%L
+  test-azuremonitor
+  %%
+  Copyright (C) 2018 - 2021 Nuance Communications Inc. All Rights Reserved.
+  %%
+  The copyright to the computer program(s) herein is the property of
+  Nuance Communications Inc. The program(s) may be used and/or copied
+  only with the written permission from Nuance Communications Inc.
+  or in accordance with the terms and conditions stipulated in the
+  agreement/contract under which the program(s) have been supplied.
+  
+  Author: siyuan_bi
+  Date  : Oct 29, 2021, 11:14:02 AM
+  #L%
+  -->
+
+
+<included>
+
+    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+        <Marker>report</Marker>
+        <OnMatch>ALLOW</OnMatch>
+    </turboFilter>
+    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+        <Marker>audit</Marker>
+        <OnMatch>NEUTRAL</OnMatch>
+    </turboFilter>
+    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+        <Marker>security</Marker>
+    </turboFilter>
+    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+        <Marker>info</Marker>
+    </turboFilter>
+    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+        <Marker>warning</Marker>
+    </turboFilter>
+    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+        <Marker>error</Marker>
+    </turboFilter>
+    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+        <Marker>debug</Marker>
+    </turboFilter>
+    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+        <Marker>monitoring</Marker>
+    </turboFilter>
+    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+        <Marker>event</Marker>
+    </turboFilter>
+
+</included>

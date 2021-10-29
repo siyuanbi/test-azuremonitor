@@ -1,0 +1,28 @@
+apiVersion: skaffold/v2beta17
+kind: Config
+build:
+  artifacts:
+    - image: test-azuremonitor
+      custom:
+        buildCommand: build.sh
+        dependencies:
+          paths:
+            - src/**
+            - pom.xml
+
+deploy:
+  helm:
+    releases:
+      - name: test-azuremonitor
+        chartPath: src/main/helm/test-azuremonitor
+        artifactOverrides:
+          image: test-azuremonitor
+        setValues:
+          ambassador.enabled: "false"
+          imagePullPolicy: Never
+          networkPolicy.enabled: "false"
+          hpa.enabled: "false"
+          podDisruptionBudget.enabled: "false"
+          prometheus.prometheusRulesEnabled: "false"
+          prometheus.serviceMonitorEnabled: "false"
+          service.type: ClusterIP

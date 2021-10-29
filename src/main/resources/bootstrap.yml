@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: test-azuremonitor
+  cloud:
+    discovery:
+      enabled: false
+    config:
+      discovery:
+        enabled: false
+      enabled: false

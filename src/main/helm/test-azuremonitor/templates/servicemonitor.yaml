@@ -1,0 +1,19 @@
+{{- if eq .Values.prometheus.serviceMonitorEnabled true}}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "common.fullname" . }}
+  labels:
+    {{- include "common.standardLabels" . | nindent 4 }}
+    global-prometheus/scrape: "true"
+spec:
+  selector:
+    matchLabels:
+      {{- include "common.standardSelectorLabels" (merge (dict "componentLabelValue" .Values.componentLabels.type) . ) | nindent 6 }}
+  endpoints:
+    - port: rest
+      interval: {{ .Values.prometheus.metricsScrapeInterval }}
+      scheme: http
+      path: "/actuator/prometheus"
+{{- end }}

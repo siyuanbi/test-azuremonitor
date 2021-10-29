@@ -1,0 +1,32 @@
+#spring:
+#  profiles: test
+
+# Graceful shutdown delay            
+application:
+  shutdownhook:
+    delay-msec: 500
+NUANCE: nuance
+
+# Spring Boot management endpoint configuration           
+management:
+  port: 9099
+  info:
+    git:
+      mode: full
+      
+# Spring Boot enpoints Management endpoint        
+endpoints:
+  metrics:
+    sensitive: false
+  env:
+    sensitive: false
+  health:
+    enabled: false
+
+# short value just for testing 
+estaGracefulShutdownWaitSeconds: 5
+
+# Application-specific configuration
+# TODO: You might want to change the name "sample-application"
+sample-application:
+  server-name: Sample App Under Test

@@ -1,0 +1,33 @@
+version: '3.3'
+
+services:
+  app:
+    image: test-azuremonitor:1.0.0-SNAPSHOT
+    ports:
+      - 9090:9090
+      - 9099:9099
+    environment:
+      JAEGER_HOST: jaeger
+      JAEGER_COLLECTOR_PORT: 14268
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./src/config/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9191:9090
+    depends_on:
+      - app
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.10
+    ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "16686:16686"
+      - "14268:14268"
+      - "9411:9411"
+    depends_on:
+      - app

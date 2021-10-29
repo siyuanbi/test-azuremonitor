@@ -1,0 +1,14 @@
+{{- if eq .Values.podDisruptionBudget.enabled true}}
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "common.fullname" . }}
+  labels:
+    {{- include "common.standardLabels" (merge (dict "componentLabelValue" .Values.componentLabels.type) . ) | nindent 4 }}
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      {{- include "common.standardSelectorLabels" (merge (dict "componentLabelValue" .Values.componentLabels.type) . ) | nindent 6 }}
+{{- end }}

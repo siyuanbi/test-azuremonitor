@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "common.fullname" . }}
+  labels:
+    {{- include "common.standardLabels" (merge (dict "componentLabelValue" .Values.componentLabels.type) . ) | nindent 4 }}
+spec:
+  {{- if ne .Values.hpa.enabled true}}
+  replicas: {{ .Values.replicas }}
+  {{- end}}
+  selector:
+    matchLabels:
+      {{- include "common.standardSelectorLabels" (merge (dict "componentLabelValue" .Values.componentLabels.type) . ) | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: {{ .Values.istioInjectEnabled | quote }}
+      labels:
+        {{- include "common.standardSelectorLabels" (merge (dict "componentLabelValue" .Values.componentLabels.type) . ) | nindent 8 }}
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    {{- include "common.standardSelectorLabels" (merge (dict "componentLabelValue" .Values.componentLabels.type) . ) | nindent 20 }}
+                topologyKey: topology.kubernetes.io/zone
+            - weight: 2
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    {{- include "common.standardSelectorLabels" (merge (dict "componentLabelValue" .Values.componentLabels.type) . ) | nindent 20 }}
+                topologyKey: kubernetes.io/hostname
+      nodeSelector:
+        beta.kubernetes.io/os: linux
+      tolerations:
+        - key: "linux"
+          operator: Equal
+          value: "true"
+      containers:
+        - name: "{{ .Chart.Name }}"
+          image: "{{- include "template.containerImage" .}}"
+          imagePullPolicy: {{ .Values.imagePullPolicy | quote }}
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp-volume
+          env:
+            - name: "JAVA_SPRING_PROFILES"
+              value: {{ .Values.springProfiles | quote }}
+            - name: "JAEGER_HOST"
+              value: {{ .Values.jaegerHost | quote }}
+          ports:
+            - name: rest
+              containerPort: 9099
+          securityContext:
+          {{- toYaml .Values.security.securityContext | nindent 12 }}
+          resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+          {{ if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: "/actuator/health/readiness"
+              port: rest
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          {{ end }}
+          {{ if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: "/actuator/health/liveness"
+              port: rest
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          {{ end }}
+      volumes:
+        - name: tmp-volume
+          emptyDir: {}

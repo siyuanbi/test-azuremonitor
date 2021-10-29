@@ -1,0 +1,31 @@
+{{- if eq .Values.prometheus.prometheusRulesEnabled true}}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "common.fullname" . }}
+  labels:
+    {{- include "common.standardLabels" (merge (dict "componentLabelValue" .Values.componentLabels.type) . ) | nindent 4 }}
+{{ toYaml .Values.prometheus.prometheusRulesLabels | indent 4 }}
+spec:
+  groups:
+    - name: ./{{ .Release.Name }}-alerting.rules
+      rules:
+        - alert: {{ .Release.Name }}-{{ .Release.Namespace }}-pod-down
+          annotations:
+            summary: {{ .Release.Name }} Pods are down in {{ .Release.Namespace }} namespace
+          expr: 100 * (count(up == 0) BY (job) / count(up) BY (job)) > 10
+          for: {{ .Values.prometheus.alertConfigurations.podsDown.pendingTime }}
+          labels:
+            severity: critical
+            alert_through: pagerduty-platform
+            rule_type: catch-all
+        - alert: {{ .Release.Name }}-{{ .Release.Namespace }}-deadmanswitch
+          annotations:
+            description: This is a DeadMansSwitch meant to ensure that the entire Alerting
+              pipeline is functional.
+            summary: Alerting DeadMansSwitch
+          expr: vector(1)
+          labels:
+            severity: none
+{{- end}}

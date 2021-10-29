@@ -1,0 +1,74 @@
+NUANCE: nuance
+
+# Used by OpenTracing to report the "service-name" of a Span
+# See https://github.com/opentracing-contrib/java-spring-jaeger#defaults
+spring:
+  application:
+    name: test-azuremonitor
+
+server:
+  port: 9099
+
+# Spring Boot management endpoint configuration
+management:
+  server:
+    port: 9099
+  info:
+    git:
+      mode: full
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+    health:
+      enabled: true
+      probes:
+        enabled: true
+  health:
+    probes:
+      enabled: true
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+
+
+
+JAEGER_PROPAGATION: b3
+JAEGER_TRACEID_128BIT: true
+JAEGER_HOST: localhost
+JAEGER_COLLECTOR_PORT: 14268
+
+opentracing:
+  jaeger:
+    enable-b3-propagation: true
+    enabled: true
+    http-sender:
+      url: http://${JAEGER_HOST}:${JAEGER_COLLECTOR_PORT}/api/traces
+
+# Application-specific configuration
+# TODO: You might want to change the name "sample-application"
+sample-application:
+  server-name: test-azuremonitor
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: production
+  main:
+    banner-mode: "off"
+
+# Graceful shutdown delay
+# short value just for testing
+estaGracefulShutdownWaitSeconds: 30
