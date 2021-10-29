@@ -18,9 +18,6 @@
 package com.nuance.service;
 
 import ch.sbb.esta.openshift.gracefullshutdown.GracefulshutdownSpringApplication;
-import io.jaegertracing.Configuration;
-import io.jaegertracing.micrometer.MicrometerMetricsFactory;
-import javax.annotation.PostConstruct;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
@@ -31,16 +28,5 @@ public class SampleApplication {
     /** Spring Boot app entry point. */
     public static void main(final String[] args) {
         GracefulshutdownSpringApplication.run(SampleApplication.class, args);
-    }
-
-    /**
-     * Initializes Jaeger Metrics support.
-     */
-    @PostConstruct
-    public void initializeJaegerMetrics() {
-        // this will expose Jaeger internal metrics
-        final var metricsReporter = new MicrometerMetricsFactory();
-        final var configuration = new Configuration("test-azuremonitor");
-        configuration.getTracerBuilder().withMetricsFactory(metricsReporter).build();
     }
 }

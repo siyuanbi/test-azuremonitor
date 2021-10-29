@@ -39,13 +39,6 @@ spec:
           protocol: UDP
         - port: 53
           protocol: TCP
-
-    - to:
-        - podSelector:
-            matchLabels:
-              app: jaeger
-          namespaceSelector:
-            { }
     - to:
         - podSelector:
             matchLabels:

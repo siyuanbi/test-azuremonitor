@@ -23,7 +23,6 @@ import com.nuance.service.rest.model.Greeting;
 import com.nuance.service.rest.model.GreetingReply;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.micrometer.core.instrument.Metrics;
-import io.opentracing.Tracer;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -46,8 +45,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class GreetingController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(GreetingController.class);
-
-  private final Tracer tracer;
 
   private final SampleApplicationProperties appProperties;
 
@@ -101,17 +98,18 @@ public class GreetingController {
     return GreetingReply.builder().replyMessage(msg).build();
   }
 
+  //TOOD:
   private void nestedCall() {
-    final var serverSpan = tracer.activeSpan();
-
-    final var localSpan = tracer.buildSpan("nestedLocalSpan").asChildOf(serverSpan)
-        .withTag("tag1", "value1").start();
-    try {
-      localSpan.log("event1");
-      localSpan.log("event2");
-      // do something important
-    } finally {
-      localSpan.finish();
-    }
+//    final var serverSpan = tracer.activeSpan();
+//
+//    final var localSpan = tracer.buildSpan("nestedLocalSpan").asChildOf(serverSpan)
+//        .withTag("tag1", "value1").start();
+//    try {
+//      localSpan.log("event1");
+//      localSpan.log("event2");
+//      // do something important
+//    } finally {
+//      localSpan.finish();
+//    }
   }
 }

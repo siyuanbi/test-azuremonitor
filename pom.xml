@@ -46,12 +46,8 @@
     <swagger.info.object.file>${project.basedir}/src/main/resources/swagger_info.json
     </swagger.info.object.file>
     <swagger.input>${swagger.output.dir}/swagger.json</swagger.input>
-    
-        <opentracing.spring.jaeger.web.starter.version>3.3.1
-    </opentracing.spring.jaeger.web.starter.version>
     <swagger-maven-plugin-version>3.1.8</swagger-maven-plugin-version>
-    
-        <org.projectlombok.version>1.18.20</org.projectlombok.version>
+    <org.projectlombok.version>1.18.20</org.projectlombok.version>
     
     <!--  project.version.suffix: could be passed from CI pipeline as build-number and appended to tag for docker image and helm chart version   -->
     <project.version.suffix/>
@@ -126,36 +122,8 @@
       <artifactId>validation-api</artifactId>
       <version>${javax.validation.api.version}</version>
     </dependency>
-    <!-- TRACING -->
+    <!-- Misc libraries -->
     <dependency>
-      <groupId>io.jaegertracing</groupId>
-      <artifactId>jaeger-core</artifactId>
-      <version>${jaeger.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.jaegertracing</groupId>
-      <artifactId>jaeger-client</artifactId>
-      <version>${jaeger.version}</version>
-    </dependency>
-    <!-- TRACING: exposing Jaeger internal metrics to Micrometer -->
-    <dependency>
-      <groupId>io.jaegertracing</groupId>
-      <artifactId>jaeger-micrometer</artifactId>
-      <version>${jaeger.version}</version>
-    </dependency>
-        <!-- TRACING: automatic tracing for REST calls -->
-    <dependency>
-      <groupId>io.opentracing.contrib</groupId>
-      <artifactId>opentracing-spring-jaeger-web-starter</artifactId>
-      <version>${opentracing.spring.jaeger.web.starter.version}</version>
-    </dependency>
-        <dependency>
-      <groupId>io.opentracing.contrib</groupId>
-      <artifactId>opentracing-spring-jaeger-starter</artifactId>
-      <version>${opentracing.spring.jaeger.starter.version}</version>
-    </dependency>
-        <!-- Misc libraries -->
-        <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>${org.projectlombok.version}</version>
@@ -232,12 +200,6 @@
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-commons</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.opentracing</groupId>
-      <artifactId>opentracing-mock</artifactId>
-      <version>${opentracing.mock.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

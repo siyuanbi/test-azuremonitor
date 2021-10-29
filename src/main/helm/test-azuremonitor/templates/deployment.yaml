@@ -46,11 +46,6 @@ spec:
           volumeMounts:
             - mountPath: /tmp
               name: tmp-volume
-          env:
-            - name: "JAVA_SPRING_PROFILES"
-              value: {{ .Values.springProfiles | quote }}
-            - name: "JAEGER_HOST"
-              value: {{ .Values.jaegerHost | quote }}
           ports:
             - name: rest
               containerPort: 9099

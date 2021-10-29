@@ -19,7 +19,6 @@ package com.nuance.service.rest.controller
 
 import com.nuance.service.SampleApplicationProperties
 import com.nuance.service.rest.model.Greeting
-import io.opentracing.mock.MockTracer
 import spock.lang.Specification
 
 public class GreetingControllerSpec extends Specification {
@@ -27,9 +26,8 @@ public class GreetingControllerSpec extends Specification {
     def "test say Hello for get request"() {
         given: "request and mock constructor args"
         def request = "test"
-        def tracer = new MockTracer()
         def properties = Mock(SampleApplicationProperties)
-        def controller = new GreetingController(tracer, properties)
+        def controller = new GreetingController(properties)
 
         when: "say hello request is made"
         def response = controller.sayhello(request)
@@ -42,9 +40,8 @@ public class GreetingControllerSpec extends Specification {
     def "test say Hello for post request for english language"() {
         given: "request and mock constructor args"
         def request = new Greeting(caller: "test", language: "english")
-        def tracer = new MockTracer()
         def properties = Mock(SampleApplicationProperties)
-        def controller = new GreetingController(tracer, properties)
+        def controller = new GreetingController(properties)
 
         when: "say hello request is made"
         def response = controller.sayhello(request)
@@ -57,9 +54,8 @@ public class GreetingControllerSpec extends Specification {
     def "test say Hello for post request for spanish language"() {
         given: "request and mock constructor args"
         def request = new Greeting(caller: "test", language: "spanish")
-        def tracer = new MockTracer()
         def properties = Mock(SampleApplicationProperties)
-        def controller = new GreetingController(tracer, properties)
+        def controller = new GreetingController(properties)
 
         when: "say hello request is made"
         def response = controller.sayhello(request)

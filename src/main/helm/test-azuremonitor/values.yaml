@@ -1,7 +1,6 @@
 imageRepo: "entrd-jfrog.ent.nuance.com/eiep-helm-dev-local"
 replicas: 1
 springProfiles: production
-jaegerHost: platform-jaeger-collector.platform-monitoring-jaeger-operator.svc.cluster.local
 istioInjectEnabled: true
 imagePullPolicy: Always
 
