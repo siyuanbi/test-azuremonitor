@@ -5,5 +5,6 @@ appVersion: "1.0.0"
 description: "test-azuremonitor"
 dependencies:
   - name: common
-    repository: file://iep-common-util
+    repository: https://entrd-artifactory.nuance.com:443/artifactory/eiep-helm-dev
+#    repository: file://iep-common-util
     version: 1.0.0

@@ -6,6 +6,8 @@ services:
     ports:
       - 9090:9090
       - 9099:9099
+    environment:
+      APPLICATIONINSIGHTS_CONNECTION_STRING: InstrumentationKey=dc238825-fbab-4158-be48-c4ce2a35e9f5
 
   prometheus:
     image: prom/prometheus

@@ -298,15 +298,28 @@
             <enabled>true</enabled>
           </layers>
           <image>
+<!--            <bindings>-->
+<!--              <binding>${project.basedir}/src/main/resources/applicationinsights-agent-3.2.2.jar:/usr/local/java/applicationinsights-agent-3.2.2.jar</binding>-->
+<!--              <binding>${project.basedir}/src/main/resources/applicationinsights.json:/usr/local/java/applicationinsights.json</binding>-->
+<!--            </bindings>-->
             <builder>gcr.io/paketo-buildpacks/builder:base</builder>
             <buildpacks>
               <buildpack>gcr.io/paketo-buildpacks/azul-zulu:latest</buildpack>
               <buildpack>gcr.io/paketo-buildpacks/executable-jar:latest</buildpack>
               <buildpack>gcr.io/paketo-buildpacks/spring-boot:latest</buildpack>
+              <buildpack>gcr.io/paketo-buildpacks/azure-application-insights:latest</buildpack>
+<!--              <buildpack>gcr.io/paketo-buildpacks/java-azure:latest</buildpack>-->
             </buildpacks>
+            <bindings>
+              <binding>${project.basedir}/bindings:/platform/bindings/application-insights</binding>
+            </bindings>
             <env>
               <BP_JVM_VERSION>11.*</BP_JVM_VERSION>
+<!--              <BP_DEBUG>true</BP_DEBUG>-->
+<!--              <JAVA_TOOL_OPTIONS>-DAPPLICATIONINSIGHTS_CONNECTION_STRING=InstrumentationKey=dc238825-fbab-4158-be48-c4ce2a35e9f5</JAVA_TOOL_OPTIONS>-->
+<!--              <JAVA_TOOL_OPTIONS>-javaagent:C:\workspace\test-azuremonitor\src\main\resources\applicationinsights-agent-3.2.2.jar</JAVA_TOOL_OPTIONS>-->
             </env>
+<!--            <verboseLogging>true</verboseLogging>-->
           </image>
         </configuration>
       </plugin>
@@ -650,7 +663,7 @@ for each desired output type -->
                 <exclude>**/*Application.class</exclude>
                 <exclude>**/*ApplicationProperties.class</exclude>
                 <exclude>**/model/**</exclude>
-                              </excludes>
+              </excludes>
               <rules>
                 <rule>
                   <element>BUNDLE</element>
@@ -707,6 +720,9 @@ for each desired output type -->
       <!-- this is needed because "resources" element overrides the default one -->
       <resource>
         <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>**/applicationinsights-agent-3.2.2.jar</exclude>
+        </excludes>
       </resource>
     </resources>
   </build>

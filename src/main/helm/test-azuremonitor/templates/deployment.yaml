@@ -46,6 +46,9 @@ spec:
           volumeMounts:
             - mountPath: /tmp
               name: tmp-volume
+          env:
+            - name: APPLICATIONINSIGHTS_CONNECTION_STRING
+              value: InstrumentationKey=dc238825-fbab-4158-be48-c4ce2a35e9f5
           ports:
             - name: rest
               containerPort: 9099
