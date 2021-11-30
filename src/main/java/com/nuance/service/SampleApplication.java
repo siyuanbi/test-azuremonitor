@@ -18,7 +18,16 @@
 package com.nuance.service;
 
 import ch.sbb.esta.openshift.gracefullshutdown.GracefulshutdownSpringApplication;
+import com.azure.core.credential.TokenCredential;
+import com.azure.core.management.AzureEnvironment;
+import com.azure.core.management.profile.AzureProfile;
+import com.azure.identity.AzureCliCredentialBuilder;
+import com.azure.identity.DefaultAzureCredentialBuilder;
+import com.azure.resourcemanager.AzureResourceManager;
+import com.nuance.service.azure.MonitorManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 /**
  * Main application class.
@@ -28,5 +37,16 @@ public class SampleApplication {
     /** Spring Boot app entry point. */
     public static void main(final String[] args) {
         GracefulshutdownSpringApplication.run(SampleApplication.class, args);
+    }
+
+    @Bean
+    public AzureResourceManager azure() {
+        AzureProfile profile = new AzureProfile(AzureEnvironment.AZURE);
+        // Use this line for auto credential detection, for this SPIKE, we will use Azure CLI
+//        TokenCredential credential = new DefaultAzureCredentialBuilder().build();
+        TokenCredential credential = new AzureCliCredentialBuilder().build();
+        return AzureResourceManager
+                .authenticate(credential, profile)
+                .withSubscription("416e4f7f-3466-4cd0-b530-0c50960d6d2c");
     }
 }
