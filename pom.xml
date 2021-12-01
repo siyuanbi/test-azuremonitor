@@ -326,6 +326,7 @@
             <builder>gcr.io/paketo-buildpacks/builder:base</builder>
             <buildpacks>
               <buildpack>gcr.io/paketo-buildpacks/azul-zulu:latest</buildpack>
+              <buildpack>gcr.io/paketo-buildpacks/syft</buildpack>
               <buildpack>gcr.io/paketo-buildpacks/executable-jar:latest</buildpack>
               <buildpack>gcr.io/paketo-buildpacks/spring-boot:latest</buildpack>
               <buildpack>gcr.io/paketo-buildpacks/azure-application-insights:latest</buildpack>
@@ -336,11 +337,11 @@
             </bindings>
             <env>
               <BP_JVM_VERSION>11.*</BP_JVM_VERSION>
-<!--              <BP_DEBUG>true</BP_DEBUG>-->
+              <BP_DEBUG>true</BP_DEBUG>
 <!--              <JAVA_TOOL_OPTIONS>-DAPPLICATIONINSIGHTS_CONNECTION_STRING=InstrumentationKey=dc238825-fbab-4158-be48-c4ce2a35e9f5</JAVA_TOOL_OPTIONS>-->
 <!--              <JAVA_TOOL_OPTIONS>-javaagent:C:\workspace\test-azuremonitor\src\main\resources\applicationinsights-agent-3.2.2.jar</JAVA_TOOL_OPTIONS>-->
             </env>
-<!--            <verboseLogging>true</verboseLogging>-->
+            <verboseLogging>true</verboseLogging>
           </image>
         </configuration>
       </plugin>
