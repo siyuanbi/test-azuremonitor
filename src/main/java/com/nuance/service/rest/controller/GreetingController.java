@@ -17,6 +17,8 @@
 
 package com.nuance.service.rest.controller;
 
+import com.microsoft.applicationinsights.TelemetryClient;
+import com.microsoft.applicationinsights.telemetry.Duration;
 import com.nuance.service.SampleApplicationProperties;
 import com.nuance.service.common.LogUtil;
 import com.nuance.service.rest.model.Greeting;
@@ -30,12 +32,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.owasp.security.logging.SecurityMarkers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.Instant;
+import java.util.Date;
 
 // TODO: This can be removed once you define your own REST API
 
@@ -47,6 +53,9 @@ public class GreetingController {
   private static final Logger LOGGER = LoggerFactory.getLogger(GreetingController.class);
 
   private final SampleApplicationProperties appProperties;
+
+  @Autowired
+  private TelemetryClient telemetryClient;
 
   /**
    * GET method implementation for plain-text request.
@@ -67,6 +76,13 @@ public class GreetingController {
 
     final var greetingTextCounter = Metrics.counter("greeting.plaintext.count");
     greetingTextCounter.increment();
+    telemetryClient.trackMetric("testMetric", greetingTextCounter.count());
+    telemetryClient.trackHttpRequest("testHttpRequest", Date.from(Instant.now()), 1, "testing", true);
+    telemetryClient.trackTrace("testTrace");
+    telemetryClient.trackEvent("testEvent");
+    telemetryClient.trackException(new Exception("testException"));
+    telemetryClient.trackPageView("testPageView");
+    telemetryClient.trackDependency("testDependency", "test", new Duration(1), true);
 
     nestedCall();
 

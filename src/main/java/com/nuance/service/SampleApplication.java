@@ -24,6 +24,7 @@ import com.azure.core.management.profile.AzureProfile;
 import com.azure.identity.AzureCliCredentialBuilder;
 import com.azure.identity.DefaultAzureCredentialBuilder;
 import com.azure.resourcemanager.AzureResourceManager;
+import com.microsoft.applicationinsights.TelemetryClient;
 import com.nuance.service.azure.MonitorManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -48,5 +49,10 @@ public class SampleApplication {
         return AzureResourceManager
                 .authenticate(credential, profile)
                 .withSubscription("416e4f7f-3466-4cd0-b530-0c50960d6d2c");
+    }
+
+    @Bean
+    public TelemetryClient telemetryClient() {
+        return new TelemetryClient();
     }
 }
